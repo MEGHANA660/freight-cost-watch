@@ -6,8 +6,7 @@ either **cites the exact note that explains it** or says it is **unexplained**. 
 ```bash
 pip install pandas scikit-learn
 python run.py                      # -> outputs/output.csv (+ weekly_metrics.csv, cost_log.json)
-python evals/run_evals.py          # 54 checks, exit code 1 on any failure
-./repro_check.sh                   # 3 independent runs, byte-for-byte diff
+python evals/run_evals.py          # 54 checks, exit code 1 on any failure                 
 python ask.py "why did Chennai-Bangalore get pricier in March?"   # stretch: Q&A over results
 ```
 
