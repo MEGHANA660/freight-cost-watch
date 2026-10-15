@@ -1,4 +1,0 @@
-e3af7b5ce22a834d05e1cd5e8bff0d4a1dbdd4aba9bbcda7f80c4fee4aaebb61  outputs/repro/run1/output.csv
-e3af7b5ce22a834d05e1cd5e8bff0d4a1dbdd4aba9bbcda7f80c4fee4aaebb61  outputs/repro/run2/output.csv
-e3af7b5ce22a834d05e1cd5e8bff0d4a1dbdd4aba9bbcda7f80c4fee4aaebb61  outputs/repro/run3/output.csv
-REPRODUCIBLE: 3 runs byte-identical (output.csv, weekly_metrics.csv, cost_log.json)
