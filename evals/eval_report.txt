@@ -1,0 +1,78 @@
+1. METRICS vs an independent pure-python recomputation (no pandas, no shared code)
+  [PASS] all route-weeks agree on cost/tonne-km, vs-own, vs-peer (728 route-weeks, 0 mismatches)
+  [PASS] no missing calendar weeks (so 'last 8 weeks with data' == 'last 8 calendar weeks') 
+  [PASS] peer average excludes the route itself 
+
+2. SAMPLE FILE: the 3 rows provided in sample_output_format_v2.csv must reproduce
+  [PASS] Delhi-Jaipur 2024-11-11 numbers/verdict/note identical to sample 
+  [PASS] Ahmedabad-Mumbai 2025-01-20 numbers/verdict/note identical to sample 
+  [PASS] Mumbai-Pune 2025-09-15 numbers/verdict/note identical to sample 
+  [PASS] output columns identical to sample (names + order) 
+
+3. GOLD SET hand-labelled from reading the notes + series (written before tuning the code)
+  [PASS] gold Delhi-Jaipur 2024-11-11 -> Yes  (got ('Yes', ''))
+  [PASS] gold Delhi-Jaipur 2024-11-18 -> Yes  (got ('Yes', ''))
+  [PASS] gold Ahmedabad-Mumbai 2025-01-20 -> No (justified) N002 (got ('No (justified)', 'N002'))
+  [PASS] gold Chennai-Bangalore 2025-02-24 -> No (justified) N001 (got ('No (justified)', 'N001'))
+  [PASS] gold Chennai-Bangalore 2025-03-03 -> No (justified) N001 (got ('No (justified)', 'N001'))
+  [PASS] gold Chennai-Bangalore 2025-03-10 -> Yes  (got ('Yes', ''))
+  [PASS] gold Chennai-Bangalore 2025-03-17 -> Yes  (got ('Yes', ''))
+  [PASS] gold Mumbai-Pune 2025-09-15 -> Yes  (got ('Yes', ''))
+  [PASS] known false-alarm candidate not reported: Delhi-Chennai 2024-02-05 
+  [PASS] known false-alarm candidate not reported: Mumbai-Delhi 2025-05-12 
+  [PASS] slow Mumbai-Pune creep (H2 2025) is surfaced, never 'justified' (10 weeks)
+  [PASS] no other rows reported []
+
+4. HALLUCINATION TRAPS on synthetic notes (judge must refuse to cite)
+  [PASS] correct route + week -> justified (cited T1)
+  [PASS] WRONG ROUTE (same dates) -> unexplained (cited None)
+  [PASS] WRONG WINDOW (week after it ended) -> unexplained (cited None)
+  [PASS] WRONG WINDOW (week before it began) -> unexplained (cited None)
+  [PASS] note says costs NOT affected -> unexplained (cited None)
+  [PASS] 'no major disruptions' note -> unexplained (cited None)
+  [PASS] all-routes diesel note cannot explain a +25% gap vs peers (cited None)
+  [PASS] stated 5-7% cannot cover a +30% rise (cited None)
+  [PASS] no notes at all -> unexplained (cited None)
+
+5. CITATION AUDIT of every 'justified' row, re-verified from the raw notes file
+  [PASS] Ahmedabad-Mumbai 2025-01-20 cites N002: route ok, week overlaps window 
+  [PASS] Chennai-Bangalore 2025-02-24 cites N001: route ok, week overlaps window 
+  [PASS] Chennai-Bangalore 2025-03-03 cites N001: route ok, week overlaps window 
+  [PASS] every 'Yes' row has blank matched_note_id 
+
+6. NOTE PARSER: facts extracted from the 10 real notes (hand-checked expectations)
+  [PASS] N001 raises, window 2025-02-24..2025-03-08 
+  [PASS] N002 raises, window 2025-01-20..2025-01-26 
+  [PASS] N003 raises, window 2025-05-05..2025-06-29 
+  [PASS] N004 can never justify (polarity=no_effect) 
+  [PASS] N005 can never justify (polarity=no_effect) 
+  [PASS] N006 can never justify (polarity=no_effect) 
+  [PASS] N007 can never justify (polarity=no_effect) 
+  [PASS] N008 can never justify (polarity=no_effect) 
+  [PASS] N009 can never justify (polarity=no_effect) 
+  [PASS] N010 can never justify (polarity=no_effect) 
+
+7. SYNTHETIC INJECTION: multiply one route-week's cost by (1+x), same seed every run
+  detection vs. size of injected rise (24 spaced route-weeks each; one-week cost uplift)
+  + 5% injected: recall 2/24, extra rows vs baseline output: 0
+  [PASS] a +5% blip is NOT flagged (below noise) 
+  [PASS] +5% run adds no spurious rows (0)
+  +10% injected: recall 11/24, extra rows vs baseline output: 0
+  [PASS] +10% run adds no spurious rows (0)
+  +15% injected: recall 18/24, extra rows vs baseline output: 0
+  [PASS] +15% run adds no spurious rows (0)
+  +20% injected: recall 21/24, extra rows vs baseline output: 0
+  [PASS] recall at +20% >= 80% (measured; misses are where a noisy peer route masks the gap) 
+  [PASS] +20% run adds no spurious rows (0)
+  +30% injected: recall 24/24, extra rows vs baseline output: 0
+  [PASS] recall at +30% == 100% 
+  [PASS] +30% run adds no spurious rows (0)
+  [PASS] rise on Delhi-Jaipur during Chennai-Bangalore flood -> unexplained (wrong route) 
+  [PASS] rise on Delhi-Chennai in the festival week -> unexplained (wrong route) 
+
+8. THRESHOLD CALIBRATION: how noisy is a normal week? (weeks outside all known events)
+  vs-own %: n=252, sd=2.83, p99=5.9, max=6.6
+  vs-peer %: sd=6.78, p99=14.1, max=16.6
+  [PASS] spike threshold (own>=8%) sits above 99th pct of normal noise 
+
+ALL CHECKS PASSED

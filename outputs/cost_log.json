@@ -1,0 +1,8 @@
+{
+  "llm_calls": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "estimated_cost_usd": 0.0,
+  "retrieval": "local TF-IDF vector index (scikit-learn); no API, no embedding model download",
+  "note": "Verdicts, citations and reasons are deterministic code over parsed note facts."
+}
